@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //Enable CORS for local development only
-if (process.env.NODE_ENV === "development") { 
+if (process.env.NODE_ENV !== "production") { 
     app.use(cors({
         origin: "http://localhost:5173", //frontend origin
     }
