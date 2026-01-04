@@ -1,6 +1,7 @@
 // import express from "express"
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 
 const memberRoutes = require("./routes/memberRoutes.js")
 const connectDB = require("./db.js");
@@ -13,10 +14,13 @@ const rateLimiter = require("./middleware/rateLimiter.js");
 const app = express();
 const PORT = process.env.PORT || 5001;
 
-app.use(cors({
-    origin: "http://localhost:5173", //frontend origin
+//Enable CORS for local development only
+if (process.env.NODE_ENV === "development") { 
+    app.use(cors({
+        origin: "http://localhost:5173", //frontend origin
+    }
+    ))
 }
-))
 
 //.use specifies a middleware
 //parses json, gives access to req.body
@@ -29,6 +33,14 @@ app.set("trust proxy", 1)
 //1.) When api/member route is hit run the rate Limiter
 //2.) If req passes rate limit test run the normal route
 app.use("/api/members", rateLimiter, memberRoutes) 
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")))
+
+if (process.env.NODE_ENV === "production") {
+    app.get("*", (req, res) => {
+        res.sendFile(path.join(__dirname, "../../frontend/dist/index.html"))
+    })
+}
 
 
 //Sample Middleware:
