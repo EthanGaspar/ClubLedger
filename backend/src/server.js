@@ -1,13 +1,15 @@
-// import express from "express"
-const express = require("express");
-const cors = require("cors");
-const path = require("path");
+import express from "express"
+import cors from "cors"
+import path from "path"
+import { fileURLToPath } from "url"
 
-const memberRoutes = require("./routes/memberRoutes.js")
-const connectDB = require("./db.js");
-const rateLimiter = require("./middleware/rateLimiter.js");
+import memberRoutes from "./routes/memberRoutes.js"
+import connectDB from "./db.js"
+import rateLimiter from "./middleware/rateLimiter.js"
 
-
+// ES module equivalent of __dirname
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 //app refers to our server controller
 // express() initializes the server (API) framework
@@ -15,7 +17,7 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 //Enable CORS for local development only
-if (process.env.NODE_ENV !== "production") { 
+if (process.env.NODE_ENV !== "production") {
     app.use(cors({
         origin: "http://localhost:5173", //frontend origin
     }
@@ -32,7 +34,7 @@ app.set("trust proxy", 1)
 //primary middleware:
 //1.) When api/member route is hit run the rate Limiter
 //2.) If req passes rate limit test run the normal route
-app.use("/api/members", rateLimiter, memberRoutes) 
+app.use("/api/members", rateLimiter, memberRoutes)
 
 app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
@@ -56,6 +58,3 @@ connectDB().then(() => {
         console.log("Server started on Port:", PORT);
     });
 });
-
-
-

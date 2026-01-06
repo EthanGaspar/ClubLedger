@@ -1,7 +1,7 @@
-const mongoose = require("mongoose")
-const Member = require("../models/Member.js")
+import mongoose from "mongoose"
+import Member from "../models/Member.js"
 
-getAllMembers = async (_, res) => { // we don' use "req", use _ as convention
+export const getAllMembers = async (_, res) => { // we don' use "req", use _ as convention
     //.find comes from the mongoose.model object
     try {
         const members = await Member.find().sort({createdAt: -1}) //-1 will sort in desc
@@ -12,7 +12,7 @@ getAllMembers = async (_, res) => { // we don' use "req", use _ as convention
     }
 }
 
-getMemberById = async (req, res) => {
+export const getMemberById = async (req, res) => {
     //Checks format of id
     const id = req.params.id
     if (!mongoose.isValidObjectId(id)){
@@ -31,12 +31,12 @@ getMemberById = async (req, res) => {
     }
 }
 
-createMember = async (req, res) => {
+export const createMember = async (req, res) => {
     try {
         const firstName = req.body.firstName;
         const lastName = req.body.lastName;
         const active = req.body.active;
-        const role = req.body.role;        
+        const role = req.body.role;
 
         const member = new Member({firstName, lastName, active, role})
         const newMember = await member.save()
@@ -48,7 +48,7 @@ createMember = async (req, res) => {
     }
 }
 
-updateMember = async (req, res) => {
+export const updateMember = async (req, res) => {
     const id = req.params.id
     //Checks format of id
     if (!mongoose.isValidObjectId(id)){
@@ -58,7 +58,7 @@ updateMember = async (req, res) => {
     try {
         const {firstName, lastName, active, role} = req.body
         //update all specified fields
-        const updatedMember = await Member.findByIdAndUpdate(req.params.id, 
+        const updatedMember = await Member.findByIdAndUpdate(req.params.id,
             {firstName, lastName, active, role},
             {new: true, }
         )
@@ -73,7 +73,7 @@ updateMember = async (req, res) => {
     }
 }
 
-deleteMember = async (req, res) => {
+export const deleteMember = async (req, res) => {
     const id = req.params.id
     if (!mongoose.isValidObjectId(id)){
     return res.status(404).json({message: "Member not found"})
@@ -90,5 +90,3 @@ deleteMember = async (req, res) => {
         res.status(500).json({message: "Internal Server Error"})
     }
 }
-
-module.exports = { createMember, getMemberById, getAllMembers, updateMember, deleteMember};

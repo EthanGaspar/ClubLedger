@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-RollCall is a user-friendly attendance tracking and member management platform for martial arts. MERN stack application with a monorepo structure containing separate frontend (React/Vite) and backend (Express/MongoDB) directories.
+RollCall is a user-friendly attendance tracking and member management platform. MERN stack application with a monorepo structure containing separate frontend (React/Vite) and backend (Express/MongoDB) directories.
 
 ## Git Workflow
 
@@ -84,7 +84,7 @@ Backend requires `.env` with:
 ## Module Systems
 
 - Frontend: ES Modules (`"type": "module"`)
-- Backend: CommonJS (`"type": "commonjs"`)
+- Backend: ES Modules (`"type": "module"`)
 
 ## Security Notes
 
