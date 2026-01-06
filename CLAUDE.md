@@ -4,7 +4,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MERN stack application for martial arts member management. Monorepo with separate frontend (React/Vite) and backend (Express/MongoDB) directories.
+RollCall is a user-friendly attendance tracking and member management platform for martial arts. MERN stack application with a monorepo structure containing separate frontend (React/Vite) and backend (Express/MongoDB) directories.
+
+## Git Workflow
+
+- Use feature branches and pull requests when making changes
+- Branch naming: descriptive feature names (e.g., `themeUpdate`)
+- Main branch is the production branch
 
 ## Development Commands
 
@@ -31,11 +37,18 @@ npm run start    # Start backend (serves built frontend in production)
 ## Architecture
 
 ### Frontend (`/frontend`)
-- React 19 with Vite, TailwindCSS, DaisyUI (forest theme)
+- React 19 with Vite, TailwindCSS, DaisyUI
 - Entry: `src/main.jsx` → `src/App.jsx` (routes)
 - Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage)
 - API calls via Axios instance in `src/lib/axios.js` (auto-switches between dev localhost:5001 and prod `/api`)
 - Components in `src/components/`, pages in `src/pages/`
+
+### Theme System
+- Dark/Light mode toggle in Navbar
+- Light mode: DaisyUI `emerald` theme
+- Dark mode: DaisyUI `forest` theme
+- Theme persisted to localStorage
+- In light mode, use `text-primary-focus` for slightly darker primary text when needed
 
 ### Backend (`/backend`)
 - Express server on port 5001
@@ -72,3 +85,9 @@ Backend requires `.env` with:
 
 - Frontend: ES Modules (`"type": "module"`)
 - Backend: CommonJS (`"type": "commonjs"`)
+
+## Security Notes
+
+- No authentication/authorization currently implemented
+- All member data is publicly accessible (CRUD operations available to anyone)
+- Rate limiting via Upstash Redis is the only access control mechanism
