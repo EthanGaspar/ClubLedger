@@ -9,4 +9,3 @@ CRUD for Members
 Activity and Postion fields
 
 Dark/Light themes
-
