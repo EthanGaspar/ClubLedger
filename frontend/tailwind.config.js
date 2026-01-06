@@ -8,15 +8,8 @@ export default {
   theme: {
     extend: {},
   },
-  plugins: [daisyui,], 
-  daisyui:{
-    themes:[ "forest"]
+  plugins: [daisyui],
+  daisyui: {
+    themes: ["emerald", "forest"],
   }
-};
-
-module.exports = {
-  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
-  theme: { extend: {} },
-  plugins: [require("daisyui")],
-  daisyui: { themes: ["forest"] },
 };
