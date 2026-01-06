@@ -1,4 +1,4 @@
-const rateLimit = require("../config/upstash.js")
+import rateLimit from "../config/upstash.js"
 
 const rateLimiter = async (req,res,next) => {
     try {
@@ -7,9 +7,9 @@ const rateLimiter = async (req,res,next) => {
 
         //Implement authentication for per user or IP based rate limiting
         // const { success } = await rateLimit.limit(userid)
-        const ip = req.ip || req.connection.remoteAddress || "unknown-ip" 
+        const ip = req.ip || req.connection.remoteAddress || "unknown-ip"
         const key = `ip:${ip}:route:${req.baseUrl || ""}${req.path}` //prefix to avoid collisons
-        const { success, remaining, reset } = await rateLimit.limit(key) 
+        const { success, remaining, reset } = await rateLimit.limit(key)
 
         if (!success) {
             return res.status(429).json(
@@ -27,4 +27,4 @@ const rateLimiter = async (req,res,next) => {
     }
 }
 
-module.exports = rateLimiter
+export default rateLimiter

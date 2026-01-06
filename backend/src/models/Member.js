@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+import mongoose from "mongoose"
 
 //1 - Create a Schema
 //2 - model based off of that schema
@@ -26,6 +26,6 @@ const memberSchema = new mongoose.Schema(
 );
 
 //Create a Model ("Member") based on MemberModel Schema
-const Member = mongoose.model("Member", memberSchema); 
+const Member = mongoose.model("Member", memberSchema);
 
-module.exports = Member
+export default Member
