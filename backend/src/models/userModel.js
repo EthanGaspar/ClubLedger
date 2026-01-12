@@ -23,6 +23,12 @@ userSchema.statics.signup = async function (email, password) {
     if (!email || !password) {
         throw Error("All fields must be filled")
     }
+
+    //length checks
+    if (email.length > 128 || password.length > 64) {
+        throw Error("Email or password too long")
+    }
+
     if (!validator.isEmail(email)) {
         throw Error("Email is not valid")
     }
