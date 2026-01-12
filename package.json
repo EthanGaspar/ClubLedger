@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/EthanGaspar/martial-arts-managment-platform/issues"
   },
-  "homepage": "https://github.com/EthanGaspar/martial-arts-managment-platform#readme"
+  "homepage": "https://github.com/EthanGaspar/martial-arts-managment-platform#readme",
+  "dependencies": {
+    "bcrypt": "^6.0.0"
+  }
 }

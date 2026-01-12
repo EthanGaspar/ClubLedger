@@ -1,5 +1,5 @@
 import mongoose from "mongoose"
-import Member from "../models/Member.js"
+import Member from "../models/MemberModel.js"
 
 export const getAllMembers = async (_, res) => { // we don' use "req", use _ as convention
     //.find comes from the mongoose.model object
