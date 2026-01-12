@@ -8,7 +8,16 @@ const createToken = (_id) => {
 
 
 const loginUser = async (req, res) => {
-    res.json({message: "Login user endpoint"});  
+    const {email, password} = req.body;
+    try {
+        const user = await User.login(email, password);
+        const token = createToken(user._id);
+        res.status(200).json({message: "User logged in successfully", email, user, token});
+
+    } catch (error) {
+        console.error("Error in loginUser() in userController:", error);
+        return res.status(400).json({error:`Login Failed: ${error.message}`});
+    }
 }
 
 //signup user
@@ -25,8 +34,7 @@ const signupUser = async (req, res) => {
     } catch (error) {
         console.error("Error in signupUser() in userController:", error);
         return res.status(400).json({error:`Signup Failed: ${error.message}`});
-    }
-    res.json({message: "Signup user endpoint"});  
+    } 
 }
 
 export { loginUser, signupUser };
