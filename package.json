@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/EthanGaspar/martial-arts-managment-platform#readme",
   "dependencies": {
-    "bcrypt": "^6.0.0"
+    "bcrypt": "^6.0.0",
+    "validator": "^13.15.26"
   }
 }
