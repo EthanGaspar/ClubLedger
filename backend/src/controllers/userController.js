@@ -1,5 +1,10 @@
 //login user
 import User from "../models/userModel.js"; 
+import jwt from "jsonwebtoken";
+
+const createToken = (_id) => {
+    return jwt.sign({ _id: _id, }, process.env.SECRET_KEY_JWT, { expiresIn: "15m" });
+}
 
 
 const loginUser = async (req, res) => {
@@ -14,7 +19,9 @@ const signupUser = async (req, res) => {
         const user = await User.signup(email, password);
         await user.save();
 
-        res.status(201).json({message: "User signed up successfully", email, user});
+        const token = createToken(user._id);
+
+        res.status(201).json({message: "User signed up successfully", email, user, token});
     } catch (error) {
         console.error("Error in signupUser() in userController:", error);
         return res.status(400).json({error:`Signup Failed: ${error.message}`});
