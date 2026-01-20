@@ -5,6 +5,8 @@ import CreatePage from "./pages/CreatePage"
 import MemberDetailPage from "./pages/MemberDetailPage"
 import SettingsPage from "./pages/SettingsPage"
 import toast from "react-hot-toast"
+import Login from "./pages/LoginPage"
+import Signup from "./pages/SignupPage"
 
 const App = () => {
   return (
@@ -16,6 +18,8 @@ const App = () => {
         <Route path="/create" element={<CreatePage />} />
         <Route path="/member/:id" element={<MemberDetailPage />} />
         <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
       </Routes>
     </div>
   )
