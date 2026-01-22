@@ -7,7 +7,7 @@ import { useLogout } from '../hooks/useLogout'
 const Navbar = () => {
   const { user } = useAuthContext()
   const { logout } = useLogout()
-
+  
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem('theme') || 'emerald'
   })
@@ -16,6 +16,32 @@ const Navbar = () => {
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
   }, [theme])
+
+  function loggedIn() {
+    <span>Testing</span>
+    if (user) {
+      return (
+      <>
+        <span className='text-sm hidden sm:inline'>{user.email}</span>
+        <button onClick={logout} className='btn btn-ghost btn-sm sm:btn-md'>
+            <LogOut className='size-5'/>
+            <span className="hidden sm:inline">Log out</span>
+        </button>
+      </>
+      )
+    } else {
+      return ( 
+        <>
+          <Link to={"/login"} className='btn btn-ghost btn-sm sm:btn-md'>
+              <span>Log in</span>
+          </Link>
+          <Link to={"/signup"} className='btn btn-ghost btn-sm sm:btn-md'>
+              <span>Sign up</span>
+          </Link>
+        </>
+      )
+    }
+  }
 
   const toggleTheme = () => {
     setTheme(theme === 'emerald' ? 'forest' : 'emerald')
@@ -43,24 +69,7 @@ const Navbar = () => {
                     {theme === 'emerald' ? <Moon className='size-5'/> : <Sun className='size-5'/>}
                 </button>
 
-{user ? (
-                  <>
-                    <span className='text-sm hidden sm:inline'>{user.email}</span>
-                    <button onClick={logout} className='btn btn-ghost btn-sm sm:btn-md'>
-                        <LogOut className='size-5'/>
-                        <span className="hidden sm:inline">Log out</span>
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link to={"/login"} className='btn btn-ghost btn-sm sm:btn-md'>
-                        <span>Log in</span>
-                    </Link>
-                    <Link to={"/signup"} className='btn btn-ghost btn-sm sm:btn-md'>
-                        <span>Sign up</span>
-                    </Link>
-                  </>
-                )}
+                {loggedIn()}
 
             </div>
         </div>
