@@ -22,10 +22,15 @@ export const AuthContextProvider = ({ children }) => {
     // If the the user has valid credentials then login based on the JWT in their local storage
     useEffect (() => {
         // "user" refers to user in local storage "state.user" is from useReducer
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        if (user) { 
-            dispatch ({ type: "LOGIN", payload: user });
+        try {
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user) { 
+                dispatch ({ type: "LOGIN", payload: user });
+            }
+        } catch (error) {
+            // Handle corrupted localStorage data
+            console.error('Error parsing user from localStorage:', error);
+            localStorage.removeItem('user');
         }
     }, []);
 

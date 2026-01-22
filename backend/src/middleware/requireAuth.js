@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/userModel.js';
 
 const requireAuth = async (req, res, next) => {
     // Verify authentication
@@ -22,8 +21,8 @@ const requireAuth = async (req, res, next) => {
     try {
         const { _id } = jwt.verify(token, process.env.SECRET_KEY_JWT);
         
-        // Attach user to request object
-        req.user = await User.findOne({ _id }).select('_id');
+        // Attach user ID to request object
+        req.user = { _id };
         next();
     } catch (error) {
         console.error('Auth error:', error);

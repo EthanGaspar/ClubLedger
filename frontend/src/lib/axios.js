@@ -8,9 +8,15 @@ const api = axios.create({
 // Add JWT token to all requests
 api.interceptors.request.use(
   (config) => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user && user.token) {
-      config.headers.Authorization = `Bearer ${user.token}`;
+    try {
+      const user = JSON.parse(localStorage.getItem('user'));
+      if (user && user.token) {
+        config.headers.Authorization = `Bearer ${user.token}`;
+      }
+    } catch (error) {
+      // Handle corrupted localStorage data
+      console.error('Error parsing user from localStorage:', error);
+      localStorage.removeItem('user');
     }
     return config;
   },
