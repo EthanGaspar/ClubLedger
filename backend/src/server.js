@@ -4,6 +4,7 @@ import path from "path"
 import { fileURLToPath } from "url"
 
 import memberRoutes from "./routes/memberRoutes.js"
+import userRoutes from "./routes/userRoutes.js"
 import connectDB from "./db.js"
 import rateLimiter from "./middleware/rateLimiter.js"
 
@@ -35,7 +36,7 @@ app.set("trust proxy", 1)
 //1.) When api/member route is hit run the rate Limiter
 //2.) If req passes rate limit test run the normal route
 app.use("/api/members", rateLimiter, memberRoutes)
-
+app.use("/api/auth/users", rateLimiter, userRoutes)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
 if (process.env.NODE_ENV === "production") {
