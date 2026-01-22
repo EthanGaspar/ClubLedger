@@ -39,7 +39,7 @@ npm run start    # Start backend (serves built frontend in production)
 ### Frontend (`/frontend`)
 - React 19 with Vite, TailwindCSS, DaisyUI
 - Entry: `src/main.jsx` → `src/App.jsx` (routes)
-- Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage)
+- Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage), `/settings` (SettingsPage), `/login` (LoginPage), `/signup` (SignupPage)
 - API calls via Axios instance in `src/lib/axios.js` (auto-switches between dev localhost:5001 and prod `/api`)
 - Components in `src/components/`, pages in `src/pages/`
 
@@ -49,6 +49,13 @@ npm run start    # Start backend (serves built frontend in production)
 - Dark mode: DaisyUI `forest` theme
 - Theme persisted to localStorage
 - In light mode, use `text-primary-focus` for slightly darker primary text when needed
+
+### Frontend Authentication
+- AuthContext in `src/context/AuthContext.jsx` wraps app in `main.jsx`
+- useReducer pattern with LOGIN/LOGOUT actions
+- Custom hooks in `src/hooks/`:
+  - `useAuthContext.jsx` - access auth state and dispatch
+  - `useSignUp.jsx` - signup logic with loading/error states
 
 ### Backend (`/backend`)
 - Express server on port 5001
