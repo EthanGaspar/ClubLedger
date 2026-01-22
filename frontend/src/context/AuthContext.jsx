@@ -29,6 +29,16 @@ export const AuthContextProvider = ({ children }) => {
         }
     }, []);
 
+    // Listen for unauthorized events from axios interceptor
+    useEffect(() => {
+        const handleUnauthorized = () => {
+            dispatch({ type: "LOGOUT" });
+        };
+
+        window.addEventListener('unauthorized', handleUnauthorized);
+        return () => window.removeEventListener('unauthorized', handleUnauthorized);
+    }, []);
+
     console.log("AuthContext state:", state);
 
     return (

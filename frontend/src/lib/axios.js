@@ -19,15 +19,16 @@ api.interceptors.request.use(
   }
 );
 
-// Handle 401 errors by clearing auth state and redirecting to login
+// Handle 401 errors by clearing auth state
+// ProtectedRoute component will handle redirect to login
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token is invalid or expired
+      // Token is invalid or expired - clear localStorage
       localStorage.removeItem('user');
-      // Let the app handle the redirect via ProtectedRoute
-      window.location.href = '/login';
+      // Dispatch a custom event that the AuthContext can listen to
+      window.dispatchEvent(new Event('unauthorized'));
     }
     return Promise.reject(error);
   }
