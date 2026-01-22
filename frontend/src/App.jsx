@@ -7,6 +7,7 @@ import SettingsPage from "./pages/SettingsPage"
 import toast from "react-hot-toast"
 import Login from "./pages/LoginPage"
 import Signup from "./pages/SignupPage"
+import ProtectedRoute from "./components/ProtectedRoute"
 
 const App = () => {
   return (
@@ -14,10 +15,26 @@ const App = () => {
           <div className="absolute inset-0 -z-10 h-full w-full bg-base-200" />
 
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/create" element={<CreatePage />} />
-        <Route path="/member/:id" element={<MemberDetailPage />} />
-        <Route path="/settings" element={<SettingsPage />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/create" element={
+          <ProtectedRoute>
+            <CreatePage />
+          </ProtectedRoute>
+        } />
+        <Route path="/member/:id" element={
+          <ProtectedRoute>
+            <MemberDetailPage />
+          </ProtectedRoute>
+        } />
+        <Route path="/settings" element={
+          <ProtectedRoute>
+            <SettingsPage />
+          </ProtectedRoute>
+        } />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
