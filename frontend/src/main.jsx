@@ -9,7 +9,13 @@ import { AuthContextProvider } from "./context/AuthContext.jsx"
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AuthContextProvider>
+    {/* 
+
+    Wraps the entire app in the AuthContext, resulting in macro
+     differences between logged in vs logged out states 
+     
+     */}
+    <AuthContextProvider> 
       <BrowserRouter>
         <App />
         <Toaster />
