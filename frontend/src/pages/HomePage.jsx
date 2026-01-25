@@ -6,16 +6,22 @@ import api from '../lib/axios.js';
 import toast from 'react-hot-toast';
 import MemberCard from '../components/MemberCard';
 import MembersNotFound from '../components/MembersNotFound.jsx';
+import { useAuthContext } from '../hooks/useAuthContext.jsx';
 
 const HomePage = () => {
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [member, SetMember] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const fetchMembers = async () => {
       try {
-        const res = await api.get("/members");
+        const res = await api.get("/members", {
+          headers: { 
+            Authorization: `Bearer ${user.token}` 
+          }
+        });
         console.log(res.data);
         SetMember(res.data);
         setIsRateLimited(false);

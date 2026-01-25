@@ -3,9 +3,11 @@ import api from '../lib/axios'
 import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
+import { useAuthContext } from '../hooks/useAuthContext.jsx'
 
 
 const CreatePage = () => {
+  const { user } = useAuthContext()
   const [firstName, setFirstName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [active, setActive] = React.useState(true)
@@ -16,6 +18,11 @@ const CreatePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    if (!user) {
+      toast.error('You must be logged in')
+      return
+    }
     
     if (!firstName.trim() || !lastName.trim() || role === '') {
       toast.error('Please fill in all fields')
@@ -30,6 +37,11 @@ const CreatePage = () => {
         lastName,
         active,
         role
+      }, {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user.token}` 
+        }
       });
       toast.success('Member created successfully')
       navigate('/')
