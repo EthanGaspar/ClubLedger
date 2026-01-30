@@ -46,12 +46,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 
-//Sample Middleware:
-//For logging method and URL
-// app.use((req, res, next) => {
-//     console.log(`Request method is ${req.method} & URL is ${req.url}`);
-//     next(); //callback
-// });
 
 //Connect DB then listen for reqs
 connectDB().then(() => {
