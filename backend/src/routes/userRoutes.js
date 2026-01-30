@@ -1,12 +1,15 @@
 import express from 'express';
-import { signupUser, loginUser } from '../controllers/userController.js';
+import { signupUser, loginUser, logoutUser, getMe } from '../controllers/userController.js';
+import requireAuth from '../middleware/requireAuth.js';
 
 const router = express.Router();
 
-//login route
+// Public routes
 router.post('/login', loginUser);
-
-//signup route
 router.post('/signup', signupUser);
+router.post('/logout', logoutUser);
+
+// Protected routes
+router.get('/me', requireAuth, getMe);
 
 export default router;
