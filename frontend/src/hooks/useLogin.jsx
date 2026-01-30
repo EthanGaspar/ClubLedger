@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import api from '../lib/axios';
 import { useNavigate } from 'react-router-dom';
@@ -18,11 +18,9 @@ export const useLogin = () => {
         try {
             const response = await api.post('/auth/users/login', { email, password });
 
-            // Save to localStorage for persistence
-            localStorage.setItem('user', JSON.stringify(response.data));
-
-            // Update context
-            dispatch({ type: 'LOGIN', payload: response.data });
+            // Cookie is set automatically by the browser
+            // Update context with user data
+            dispatch({ type: 'LOGIN', payload: response.data.user });
 
             toast.success('Logged in successfully!');
             navigate('/');
