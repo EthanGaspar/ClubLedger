@@ -22,10 +22,10 @@ const Login = () => {
             <div className='container mx-auto px-4 py-8'>
                 <h2 className="card-title text mb-6">Log in</h2>
                 <div className="max-w-4xl mx-auto">
-                    <Link to={"/"} className="btn btn-ghost mb-6">
+                    {/* <Link to={"/"} className="btn btn-ghost mb-6">
                         <ArrowLeftIcon className="size-5" />
                         Back to Members
-                    </Link>
+                    </Link> */}
                     <div className="card bg-base-100">
                     <div className="card-body">
 
