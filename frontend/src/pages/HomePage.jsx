@@ -16,10 +16,15 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchMembers = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       try {
         const res = await api.get("/members", {
-          headers: { 
-            Authorization: `Bearer ${user.token}` 
+          headers: {
+            Authorization: `Bearer ${user.token}`
           }
         });
         console.log(res.data);
@@ -27,7 +32,7 @@ const HomePage = () => {
         setIsRateLimited(false);
       } catch (error) {
         console.log("Error fetching members:", error);
-        if (error.response.status === 429) {
+        if (error.response?.status === 429) {
           setIsRateLimited(true);
         } else {
           toast.error("Failed to fetch members");
@@ -38,7 +43,7 @@ const HomePage = () => {
     };
 
     fetchMembers();
-  }, [])
+  }, [user])
 
   return (
     <div className='min-h-screen'>

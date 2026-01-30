@@ -4,15 +4,26 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import api from '../lib/axios.js';
 import toast from 'react-hot-toast';
+import { useAuthContext } from '../hooks/useAuthContext.jsx';
 
 const MemberCard = ({member, setMember}) => {
+    const { user } = useAuthContext();
 
     const handleDelete = async (e, id) => {
         e.preventDefault(); // Prevent navigation
 
+        if (!user) {
+            toast.error('You must be logged in');
+            return;
+        }
+
         if (window.confirm("Are you sure you want to delete this member?")) {
             try {
-                await api.delete(`/members/${id}`);
+                await api.delete(`/members/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                });
                 setMember((prev) => prev.filter(m => m._id !== id)); // Update state to remove deleted member
                 toast.success("Member deleted successfully");
             } catch (error) {
