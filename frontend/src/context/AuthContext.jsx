@@ -1,4 +1,5 @@
-import { createContext, useEffect, useReducer } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
+import api from "../lib/axios";
 
 export const AuthContext = createContext();
 
@@ -12,28 +13,35 @@ export const authReducer = (state, action) => {
             return state;
     }
 };
-// "children" are the components wrapped by AuthContext
-// See main.jsx for for what it wraps
-export const AuthContextProvider = ({ children }) => { 
+
+export const AuthContextProvider = ({ children }) => {
     const [state, dispatch] = useReducer(authReducer, {
         user: null,
     });
+    const [loading, setLoading] = useState(true);
 
-    // If the the user has valid credentials then login based on the JWT in their local storage
-    useEffect (() => {
-        // "user" refers to user in local storage "state.user" is from useReducer
-        const user = JSON.parse(localStorage.getItem("user"));
+    // Check if user is authenticated on app load
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await api.get("/auth/users/me");
+                dispatch({ type: "LOGIN", payload: response.data.user });
+            } catch (error) {
+                // Not authenticated or token expired
+                dispatch({ type: "LOGOUT" });
+            } finally {
+                setLoading(false);
+            }
+        };
 
-        if (user) { 
-            dispatch ({ type: "LOGIN", payload: user });
-        }
+        checkAuth();
     }, []);
 
     console.log("AuthContext state:", state);
 
     return (
-        <AuthContext.Provider value={{...state, dispatch}}>
+        <AuthContext.Provider value={{ ...state, dispatch, loading }}>
             {children}
         </AuthContext.Provider>
-    )
-}
+    );
+};

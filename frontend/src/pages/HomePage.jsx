@@ -6,22 +6,33 @@ import api from '../lib/axios.js';
 import toast from 'react-hot-toast';
 import MemberCard from '../components/MemberCard';
 import MembersNotFound from '../components/MembersNotFound.jsx';
+import { useAuthContext } from '../hooks/useAuthContext.jsx';
 
 const HomePage = () => {
   const [isRateLimited, setIsRateLimited] = useState(false);
   const [member, SetMember] = useState([])
   const [loading, setLoading] = useState(true)
+  const { user } = useAuthContext();
 
   useEffect(() => {
     const fetchMembers = async () => {
+      if (!user) {
+        setLoading(false);
+        return;
+      }
+
       try {
-        const res = await api.get("/members");
+        const res = await api.get("/members", {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        });
         console.log(res.data);
         SetMember(res.data);
         setIsRateLimited(false);
       } catch (error) {
         console.log("Error fetching members:", error);
-        if (error.response.status === 429) {
+        if (error.response?.status === 429) {
           setIsRateLimited(true);
         } else {
           toast.error("Failed to fetch members");
@@ -32,7 +43,7 @@ const HomePage = () => {
     };
 
     fetchMembers();
-  }, [])
+  }, [user])
 
   return (
     <div className='min-h-screen'>

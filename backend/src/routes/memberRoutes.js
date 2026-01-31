@@ -4,10 +4,15 @@ import {
     getMemberById,
     createMember,
     updateMember,
-    deleteMember
+    deleteMember,
 } from "../controllers/memberController.js"
 
+import requireAuth from "../middleware/requireAuth.js"
+
+//require auth for all member routes
 const router = express.Router();
+
+router.use(requireAuth)
 
 router.get("/", getAllMembers)
 

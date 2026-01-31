@@ -4,6 +4,7 @@ import api from '../lib/axios.js';
 import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
+import { useAuthContext } from '../hooks/useAuthContext.jsx';
 
 
 const MemberDetailPage = () => {
@@ -12,9 +13,7 @@ const MemberDetailPage = () => {
   const [saving, setSaving] = React.useState(false)
   const [active, setActive] = React.useState(true)
   const [role, setRole] = React.useState('Member')
-  
-  
-
+  const { user } = useAuthContext();
 
   const navigate = useNavigate();
 
@@ -22,8 +21,17 @@ const MemberDetailPage = () => {
 
     useEffect(() => {
         const fetchMember = async () => {
+            if (!user) {
+                setLoading(false);
+                return;
+            }
+
             try {
-                const res = await api.get(`/members/${id}`);
+                const res = await api.get(`/members/${id}`, {
+                    headers: {
+                        Authorization: `Bearer ${user.token}`
+                    }
+                });
                 setMember(res.data);
             } catch (error) {
                 console.log("Error fetching member:", error);
@@ -34,7 +42,7 @@ const MemberDetailPage = () => {
         };
 
         fetchMember();
-    }, [id]);
+    }, [id, user]);
 
     console.log( member );
 
@@ -45,9 +53,18 @@ const MemberDetailPage = () => {
     }
 
   const handleDelete = async () => {
+    if (!user) {
+      toast.error('You must be logged in');
+      return;
+    }
+
     if (window.confirm("Are you sure you want to delete this member?")) {
       try {
-        await api.delete(`/members/${id}`);
+        await api.delete(`/members/${id}`, {
+          headers: {
+            Authorization: `Bearer ${user.token}`
+          }
+        });
         toast.success("Member deleted successfully");
         navigate('/');
       } catch (error) {
@@ -58,15 +75,24 @@ const MemberDetailPage = () => {
   }
 
   const handleSave = async () => {
+    if (!user) {
+      toast.error('You must be logged in');
+      return;
+    }
+
     if (!member.firstName.trim() || !member.lastName.trim()) {
       toast.error('Please fill in all fields')
       return
     }
 
     setSaving(true);
-    
+
     try {
-      await api.put(`/members/${id}`, member);
+      await api.put(`/members/${id}`, member, {
+        headers: {
+          Authorization: `Bearer ${user.token}`
+        }
+      });
       toast.success("Member updated successfully");
       navigate('/');
     } catch (error) {

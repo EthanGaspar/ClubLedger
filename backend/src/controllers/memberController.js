@@ -1,10 +1,12 @@
 import mongoose from "mongoose"
 import Member from "../models/MemberModel.js"
 
-export const getAllMembers = async (_, res) => { // we don' use "req", use _ as convention
+export const getAllMembers = async (req, res) => {
     //.find comes from the mongoose.model object
     try {
-        const members = await Member.find().sort({createdAt: -1}) //-1 will sort in desc
+        const user_id = req.user._id;
+        //"find(user_id)" specifices to fetch all members for specific user
+        const members = await Member.find({user_id}).sort({createdAt: -1}) //-1 will sort in desc
         res.status(200).json(members)
     } catch (error) {
         res.status (500).json({message:"Internal server error"})
@@ -37,8 +39,9 @@ export const createMember = async (req, res) => {
         const lastName = req.body.lastName;
         const active = req.body.active;
         const role = req.body.role;
+        const user_id = req.user._id;
 
-        const member = new Member({firstName, lastName, active, role})
+        const member = new Member({firstName, lastName, active, role, user_id})
         const newMember = await member.save()
         res.status(201).json(newMember)
 

@@ -2,6 +2,7 @@ import express from "express"
 import cors from "cors"
 import path from "path"
 import { fileURLToPath } from "url"
+import cookieParser from "cookie-parser"
 
 import memberRoutes from "./routes/memberRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
@@ -17,10 +18,14 @@ const __dirname = path.dirname(__filename)
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// Parse cookies
+app.use(cookieParser())
+
 //Enable CORS for local development only
 if (process.env.NODE_ENV !== "production") {
     app.use(cors({
         origin: "http://localhost:5173", //frontend origin
+        credentials: true, // Allow cookies to be sent
     }
     ))
 }
@@ -46,12 +51,6 @@ if (process.env.NODE_ENV === "production") {
 }
 
 
-//Sample Middleware:
-//For logging method and URL
-// app.use((req, res, next) => {
-//     console.log(`Request method is ${req.method} & URL is ${req.url}`);
-//     next(); //callback
-// });
 
 //Connect DB then listen for reqs
 connectDB().then(() => {
