@@ -1,81 +1,131 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { useLogin } from '../hooks/useLogin'
-
-import { Link, useNavigate } from "react-router-dom"
-import { ArrowLeftIcon } from "lucide-react"
-import {useState} from 'react'
+import { Link } from "react-router-dom"
+import { Mail, Lock, Sun, Moon } from "lucide-react"
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [theme, setTheme] = useState(localStorage.getItem('theme') || 'forest')
 
     const { login, loading, error } = useLogin()
-    const navigate = useNavigate();
 
-    const handleSubmit = async (e) =>{
+    useEffect(() => {
+        document.documentElement.setAttribute('data-theme', theme)
+    }, [theme])
+
+    const toggleTheme = () => {
+        const newTheme = theme === 'forest' ? 'emerald' : 'forest'
+        setTheme(newTheme)
+        localStorage.setItem('theme', newTheme)
+    }
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         await login(email, password)
     }
 
     return (
-        <div className='min-h-screen bg-base-200'>
-            <div className='container mx-auto px-4 py-8'>
-                <h2 className="card-title text mb-6">Log in</h2>
-                <div className="max-w-4xl mx-auto">
-                    {/* <Link to={"/"} className="btn btn-ghost mb-6">
-                        <ArrowLeftIcon className="size-5" />
-                        Back to Members
-                    </Link> */}
-                    <div className="card bg-base-100">
-                    <div className="card-body">
+        <div className='min-h-screen bg-base-200 flex flex-col'>
+            {/* Theme Toggle */}
+            <div className="absolute top-4 right-4">
+                <button
+                    onClick={toggleTheme}
+                    className="btn btn-ghost btn-circle"
+                    aria-label="Toggle theme"
+                >
+                    {theme === 'forest' ? (
+                        <Sun className="size-5" />
+                    ) : (
+                        <Moon className="size-5" />
+                    )}
+                </button>
+            </div>
 
-                <form onSubmit={handleSubmit}>
-                    <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Email</span>
-                    </label>
-                    <input
-                        type="text"
-                        placeholder="janedoe@example.com"
-                        className="input input-bordered"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    </div>
-
-                    <div className="form-control mb-4">
-                    <label className="label">
-                        <span className="label-text">Password</span>
-                    </label>
-                    <input
-                        type="password"
-                        placeholder="password"
-                        className="input input-bordered"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+            {/* Main Content */}
+            <div className="flex-1 flex items-center justify-center px-4 py-8">
+                <div className="w-full max-w-md">
+                    {/* Brand Section */}
+                    <div className="text-center mb-8">
+                        <h1 className="text-3xl font-bold font-mono tracking-tight text-primary">
+                            RollCall
+                        </h1>
+                        <p className="text-base-content/60 mt-1">
+                            Track attendance easily
+                        </p>
                     </div>
 
-                    <div className="card-actions justify-between">
-                        <button
-                            type="button"
-                            className="btn btn-ghost bg-transparent"
-                            onClick={() => navigate('/signup')}>
-                            <span className='italic'>Don't have an account?</span>
-                        </button>
-                        <button
-                            type="submit"
-                            className="btn btn-primary" disabled={loading}>
-                            {loading ? 'Logging in...' : 'Log in'}
-                        </button>
+                    {/* Login Card */}
+                    <div className="card bg-base-100 shadow-xl">
+                        <div className="card-body">
+                            <h2 className="card-title text-2xl mb-1">Welcome back</h2>
+                            <p className="text-base-content/60 mb-6">Sign in to your account</p>
+
+                            <form onSubmit={handleSubmit}>
+                                <div className="form-control mb-4">
+                                    <label className="label">
+                                        <span className="label-text">Email</span>
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/40">
+                                            <Mail className="size-5" />
+                                        </span>
+                                        <input
+                                            type="email"
+                                            placeholder="janedoe@example.com"
+                                            className="input input-bordered w-full pl-10"
+                                            value={email}
+                                            onChange={(e) => setEmail(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="form-control mb-6">
+                                    <label className="label">
+                                        <span className="label-text">Password</span>
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/40">
+                                            <Lock className="size-5" />
+                                        </span>
+                                        <input
+                                            type="password"
+                                            placeholder="Enter your password"
+                                            className="input input-bordered w-full pl-10"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+
+                                {error && (
+                                    <div className="alert alert-error mb-4">
+                                        <span>{error}</span>
+                                    </div>
+                                )}
+
+                                <button
+                                    type="submit"
+                                    className="btn btn-primary w-full"
+                                    disabled={loading}
+                                >
+                                    {loading ? 'Logging in...' : 'Log in'}
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </form>
-                    </div>
-                    </div>
+
+                    {/* Sign up link */}
+                    <p className="text-center mt-6 text-base-content/70">
+                        Don't have an account?{' '}
+                        <Link to="/signup" className="text-primary hover:underline font-medium">
+                            Sign up
+                        </Link>
+                    </p>
                 </div>
             </div>
         </div>
     )
 }
 
-export default Login 
+export default Login
