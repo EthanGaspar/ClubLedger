@@ -61,7 +61,7 @@ const Login = () => {
                             <h2 className="card-title text-2xl mb-1">Welcome back</h2>
                             <p className="text-base-content/60 mb-6">Sign in to your account</p>
 
-                            <form onSubmit={handleSubmit}>
+                            <form onSubmit={handleSubmit} noValidate>
                                 <div className="form-control mb-4">
                                     <label className="label">
                                         <span className="label-text">Email</span>
@@ -76,6 +76,7 @@ const Login = () => {
                                             className="input input-bordered w-full pl-10"
                                             value={email}
                                             onChange={(e) => setEmail(e.target.value)}
+                                            autoComplete="email"
                                         />
                                     </div>
                                 </div>
