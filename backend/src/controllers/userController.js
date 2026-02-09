@@ -1,5 +1,6 @@
 import User from "../models/userModel.js";
 import jwt from "jsonwebtoken";
+import { sendPasswordResetEmail } from "../config/email.js";
 
 const createToken = (_id) => {
     return jwt.sign({ _id: _id, }, process.env.SECRET_KEY_JWT, { expiresIn: "15m" });
@@ -68,4 +69,35 @@ const getMe = async (req, res) => {
     }
 }
 
-export { loginUser, signupUser, logoutUser, getMe };
+const forgotPassword = async (req, res) => {
+    const { email } = req.body;
+    try {
+        const rawToken = await User.requestPasswordReset(email);
+
+        // Only send email if user was found, but ALWAYS return same response
+        if (rawToken) {
+            await sendPasswordResetEmail(email, rawToken);
+        }
+
+        res.status(200).json({
+            message: "If an account with that email exists, a password reset link has been sent.",
+        });
+    } catch (error) {
+        console.error("Error in forgotPassword() in userController:", error);
+        return res.status(500).json({ error: "Something went wrong. Please try again." });
+    }
+};
+
+const resetPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+    try {
+        await User.resetPassword(token, password);
+        res.status(200).json({ message: "Password has been reset successfully." });
+    } catch (error) {
+        console.error("Error in resetPassword() in userController:", error);
+        return res.status(400).json({ error: error.message });
+    }
+};
+
+export { loginUser, signupUser, logoutUser, getMe, forgotPassword, resetPassword };
