@@ -7,6 +7,8 @@ import MemberDetailPage from "./pages/MemberDetailPage"
 import SettingsPage from "./pages/SettingsPage"
 import Login from "./pages/LoginPage"
 import Signup from "./pages/SignupPage"
+import ForgotPassword from "./pages/ForgotPasswordPage"
+import ResetPassword from "./pages/ResetPasswordPage"
 
 const App = () => {
   const { user, loading } = useAuthContext();
@@ -31,6 +33,8 @@ const App = () => {
         <Route path="/settings" element={user ? <SettingsPage /> : <Navigate to="/login" />} />
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
+        <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/" />} />
+        <Route path="/reset-password/:token" element={!user ? <ResetPassword /> : <Navigate to="/" />} />
       </Routes>
     </div>
   )
