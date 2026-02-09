@@ -39,7 +39,7 @@ npm run start    # Start backend (serves built frontend in production)
 ### Frontend (`/frontend`)
 - React 19 with Vite, TailwindCSS, DaisyUI
 - Entry: `src/main.jsx` → `src/App.jsx` (routes)
-- Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage), `/settings` (SettingsPage), `/login` (LoginPage), `/signup` (SignupPage)
+- Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage), `/settings` (SettingsPage), `/login` (LoginPage), `/signup` (SignupPage), `/forgot-password` (ForgotPasswordPage), `/reset-password/:token` (ResetPasswordPage)
 - API calls via Axios instance in `src/lib/axios.js` (auto-switches between dev localhost:5001 and prod `/api`)
 - Components in `src/components/`, pages in `src/pages/`
 
@@ -56,6 +56,8 @@ npm run start    # Start backend (serves built frontend in production)
 - Custom hooks in `src/hooks/`:
   - `useAuthContext.jsx` - access auth state and dispatch
   - `useSignUp.jsx` - signup logic with loading/error states
+  - `useForgotPassword.jsx` - forgot password request with loading/error/success states
+  - `useResetPassword.jsx` - reset password with token, loading/error states
 
 ### Backend (`/backend`)
 - Express server on port 5001
@@ -75,6 +77,8 @@ npm run start    # Start backend (serves built frontend in production)
 #### Authentication (`/api/auth/users`)
 - `POST /signup` - Create new user account (returns JWT)
 - `POST /login` - Authenticate user (returns JWT)
+- `POST /forgot-password` - Request password reset email
+- `POST /reset-password/:token` - Reset password with token
 
 ### Schemas
 
@@ -95,6 +99,8 @@ npm run start    # Start backend (serves built frontend in production)
 {
   email: String (required, unique),
   password: String (required, hashed),
+  resetPasswordToken: String (SHA-256 hashed, default null),
+  resetPasswordExpires: Date (default null),
   createdAt: Date,
   updatedAt: Date
 }
@@ -115,6 +121,7 @@ Backend requires `.env` with:
 - MongoDB connection string
 - Upstash Redis credentials (UPSTASH_REDIS_REST_URL, UPSTASH_REDIS_REST_TOKEN)
 - SECRET_KEY_JWT - Secret key for signing JWT tokens
+- CLIENT_URL - Frontend origin for password reset links (e.g., http://localhost:5173)
 
 ## Module Systems
 
@@ -127,3 +134,5 @@ Backend requires `.env` with:
 - Member endpoints not yet protected by authentication middleware
 - Passwords hashed with bcrypt before storage
 - Rate limiting via Upstash Redis (10 requests/20 seconds per IP)
+- Password reset via email with secure, single-use, time-limited tokens (15 min expiry, SHA-256 hashed in DB)
+- Password reset endpoint does not reveal whether an email exists (prevents enumeration)
