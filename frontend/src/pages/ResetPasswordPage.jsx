@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react'
-import { useLogin } from '../hooks/useLogin'
-import { Link } from "react-router-dom"
-import { Mail, Lock, Sun, Moon } from "lucide-react"
+import { useResetPassword } from '../hooks/useResetPassword'
+import { Link, useParams } from "react-router-dom"
+import { Lock, Sun, Moon } from "lucide-react"
 
-const Login = () => {
-    const [email, setEmail] = useState('')
+const ResetPassword = () => {
     const [password, setPassword] = useState('')
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'forest')
+    const { token } = useParams()
 
-    const { login, loading, error } = useLogin()
+    const { resetPassword, loading, error } = useResetPassword()
 
     useEffect(() => {
         document.documentElement.setAttribute('data-theme', theme)
@@ -22,7 +22,7 @@ const Login = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        await login(email, password)
+        await resetPassword(token, password)
     }
 
     return (
@@ -55,35 +55,16 @@ const Login = () => {
                         </p>
                     </div>
 
-                    {/* Login Card */}
+                    {/* Reset Password Card */}
                     <div className="card bg-base-100 shadow-xl">
                         <div className="card-body">
-                            <h2 className="card-title text-2xl mb-1">Welcome back</h2>
-                            <p className="text-base-content/60 mb-6">Sign in to your account</p>
+                            <h2 className="card-title text-2xl mb-1">Reset your password</h2>
+                            <p className="text-base-content/60 mb-6">Enter your new password</p>
 
                             <form onSubmit={handleSubmit} noValidate>
-                                <div className="form-control mb-4">
-                                    <label className="label">
-                                        <span className="label-text">Email</span>
-                                    </label>
-                                    <div className="relative">
-                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/40">
-                                            <Mail className="size-5" />
-                                        </span>
-                                        <input
-                                            type="email"
-                                            placeholder="janedoe@example.com"
-                                            className="input input-bordered w-full pl-10"
-                                            value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
-                                            autoComplete="email"
-                                        />
-                                    </div>
-                                </div>
-
                                 <div className="form-control mb-6">
                                     <label className="label">
-                                        <span className="label-text">Password</span>
+                                        <span className="label-text">New Password</span>
                                     </label>
                                     <div className="relative">
                                         <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/40">
@@ -91,17 +72,15 @@ const Login = () => {
                                         </span>
                                         <input
                                             type="password"
-                                            placeholder="Enter your password"
+                                            placeholder="Enter your new password"
                                             className="input input-bordered w-full pl-10"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
                                     </div>
-                                    <div className="text-right mt-1">
-                                        <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                                            Forgot password?
-                                        </Link>
-                                    </div>
+                                    <p className="text-xs text-base-content/50 mt-2 ml-1">
+                                        Min 8 chars, uppercase, lowercase, number, symbol
+                                    </p>
                                 </div>
 
                                 {error && (
@@ -115,17 +94,16 @@ const Login = () => {
                                     className="btn btn-primary w-full"
                                     disabled={loading}
                                 >
-                                    {loading ? 'Logging in...' : 'Log in'}
+                                    {loading ? 'Resetting...' : 'Reset Password'}
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    {/* Sign up link */}
+                    {/* Back to login link */}
                     <p className="text-center mt-6 text-base-content/70">
-                        Don't have an account?{' '}
-                        <Link to="/signup" className="text-primary hover:underline font-medium">
-                            Sign up
+                        <Link to="/login" className="text-primary hover:underline font-medium">
+                            Back to Log in
                         </Link>
                     </p>
                 </div>
@@ -134,4 +112,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default ResetPassword
