@@ -27,7 +27,8 @@ const loginUser = async (req, res) => {
 
     } catch (error) {
         console.error("Error in loginUser() in userController:", error);
-        return res.status(400).json({error:`Login Failed: ${error.message}`});
+        // Use generic error message to prevent email enumeration
+        return res.status(400).json({error: "Invalid email or password"});
     }
 }
 
@@ -45,7 +46,12 @@ const signupUser = async (req, res) => {
         res.status(201).json({message: "User signed up successfully", email, user});
     } catch (error) {
         console.error("Error in signupUser() in userController:", error);
-        return res.status(400).json({error:`Signup Failed: ${error.message}`});
+        // Only expose validation errors for signup, but sanitize sensitive ones
+        let errorMessage = "Signup failed. Please check your input.";
+        if (error.message && !error.message.includes("email")) {
+            errorMessage = error.message;
+        }
+        return res.status(400).json({error: errorMessage});
     }
 }
 

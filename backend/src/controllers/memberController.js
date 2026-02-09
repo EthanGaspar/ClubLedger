@@ -21,10 +21,12 @@ export const getMemberById = async (req, res) => {
         return res.status(404).json({message: "Member not found"})
     }
     try {
-        const member = await Member.findById(req.params.id)
+        const user_id = req.user._id;
+        // Verify the member belongs to the authenticated user
+        const member = await Member.findOne({ _id: id, user_id })
         //Verifies existence
         if (!member) {
-            return res.status(404)
+            return res.status(404).json({message: "Member not found"})
         }
         res.status(200).json(member)
     } catch (error) {
@@ -59,11 +61,13 @@ export const updateMember = async (req, res) => {
     }
 
     try {
+        const user_id = req.user._id;
         const {firstName, lastName, active, role} = req.body
-        //update all specified fields
-        const updatedMember = await Member.findByIdAndUpdate(req.params.id,
+        //update all specified fields, verify ownership
+        const updatedMember = await Member.findOneAndUpdate(
+            { _id: id, user_id },
             {firstName, lastName, active, role},
-            {new: true, }
+            {new: true}
         )
         //Checks existence of id
         if (!updatedMember){
@@ -83,7 +87,9 @@ export const deleteMember = async (req, res) => {
     }
 
     try {
-        const deletedMember = await Member.findByIdAndDelete(id, {new: false})
+        const user_id = req.user._id;
+        // Verify ownership before deleting
+        const deletedMember = await Member.findOneAndDelete({ _id: id, user_id })
         if (!deletedMember) {
             return res.status(404).json({ message: "Member not found" });
         }
