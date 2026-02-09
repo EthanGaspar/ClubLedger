@@ -1,15 +1,19 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "RollCall backend API server",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/server.js",
     "start": "node src/server.js"
   },
   "type": "module",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "express",
+    "api",
+    "mongodb"
+  ],
+  "author": "Ethan Gaspar",
   "license": "ISC",
   "dependencies": {
     "@upstash/ratelimit": "^2.0.5",
