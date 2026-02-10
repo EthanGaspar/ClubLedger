@@ -1,4 +1,4 @@
-RollCall:
+ClubLedger:
 
 A user-friendly attendance tracking and member managment platform.
 
