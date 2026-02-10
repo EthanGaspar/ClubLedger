@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useSignup } from '../hooks/useSignUp'
 import { Link } from "react-router-dom"
-import { Mail, Lock, Sun, Moon } from "lucide-react"
+import { Mail, Lock, Sun, Moon, Eye, EyeOff } from "lucide-react"
 
 const Signup = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'forest')
 
     const { signup, loading, error } = useSignup()
@@ -90,12 +91,20 @@ const Signup = () => {
                                             <Lock className="size-5" />
                                         </span>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             placeholder="Create a password"
-                                            className="input input-bordered w-full pl-10"
+                                            className="input input-bordered w-full pl-10 pr-10"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-base-content/40 hover:text-base-content/70"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                        >
+                                            {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                                        </button>
                                     </div>
                                     <p className="text-xs text-base-content/50 mt-2 ml-1">
                                         Min 8 chars, uppercase, lowercase, number, symbol
