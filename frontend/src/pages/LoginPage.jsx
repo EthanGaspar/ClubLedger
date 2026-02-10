@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import { useLogin } from '../hooks/useLogin'
 import { Link } from "react-router-dom"
-import { Mail, Lock, Sun, Moon } from "lucide-react"
+import { Mail, Lock, Sun, Moon, Eye, EyeOff } from "lucide-react"
 
 const Login = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'forest')
 
     const { login, loading, error } = useLogin()
@@ -90,12 +91,20 @@ const Login = () => {
                                             <Lock className="size-5" />
                                         </span>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             placeholder="Enter your password"
-                                            className="input input-bordered w-full pl-10"
+                                            className="input input-bordered w-full pl-10 pr-10"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-base-content/40 hover:text-base-content/70"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                        >
+                                            {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                                        </button>
                                     </div>
                                     <div className="text-right mt-1">
                                         <Link to="/forgot-password" className="text-sm text-primary hover:underline">

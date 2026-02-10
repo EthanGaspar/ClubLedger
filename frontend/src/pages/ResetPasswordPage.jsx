@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import { useResetPassword } from '../hooks/useResetPassword'
 import { Link, useParams } from "react-router-dom"
-import { Lock, Sun, Moon } from "lucide-react"
+import { Lock, Sun, Moon, Eye, EyeOff } from "lucide-react"
 
 const ResetPassword = () => {
     const [password, setPassword] = useState('')
+    const [confirmPassword, setConfirmPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [matchError, setMatchError] = useState('')
     const [theme, setTheme] = useState(localStorage.getItem('theme') || 'forest')
     const { token } = useParams()
 
@@ -22,6 +26,13 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        setMatchError('')
+
+        if (password !== confirmPassword) {
+            setMatchError('Passwords do not match')
+            return
+        }
+
         await resetPassword(token, password)
     }
 
@@ -62,7 +73,7 @@ const ResetPassword = () => {
                             <p className="text-base-content/60 mb-6">Enter your new password</p>
 
                             <form onSubmit={handleSubmit} noValidate>
-                                <div className="form-control mb-6">
+                                <div className="form-control mb-4">
                                     <label className="label">
                                         <span className="label-text">New Password</span>
                                     </label>
@@ -71,21 +82,55 @@ const ResetPassword = () => {
                                             <Lock className="size-5" />
                                         </span>
                                         <input
-                                            type="password"
+                                            type={showPassword ? "text" : "password"}
                                             placeholder="Enter your new password"
-                                            className="input input-bordered w-full pl-10"
+                                            className="input input-bordered w-full pl-10 pr-10"
                                             value={password}
                                             onChange={(e) => setPassword(e.target.value)}
                                         />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-base-content/40 hover:text-base-content/70"
+                                            aria-label={showPassword ? "Hide password" : "Show password"}
+                                        >
+                                            {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                                        </button>
                                     </div>
                                     <p className="text-xs text-base-content/50 mt-2 ml-1">
                                         Min 8 chars, uppercase, lowercase, number, symbol
                                     </p>
                                 </div>
 
-                                {error && (
+                                <div className="form-control mb-6">
+                                    <label className="label">
+                                        <span className="label-text">Confirm Password</span>
+                                    </label>
+                                    <div className="relative">
+                                        <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-base-content/40">
+                                            <Lock className="size-5" />
+                                        </span>
+                                        <input
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm your new password"
+                                            className="input input-bordered w-full pl-10 pr-10"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+                                        <button
+                                            type="button"
+                                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                            className="absolute inset-y-0 right-0 flex items-center pr-3 text-base-content/40 hover:text-base-content/70"
+                                            aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                                        >
+                                            {showConfirmPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                {(error || matchError) && (
                                     <div className="alert alert-error mb-4">
-                                        <span>{error}</span>
+                                        <span>{matchError || error}</span>
                                     </div>
                                 )}
 

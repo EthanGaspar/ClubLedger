@@ -1,32 +1,12 @@
-import nodemailer from "nodemailer";
-
-let transporter;
-
-const getTransporter = async () => {
-    if (transporter) return transporter;
-
-    // Create Ethereal test account (fake SMTP for development)
-    const testAccount = await nodemailer.createTestAccount();
-
-    transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        auth: {
-            user: testAccount.user,
-            pass: testAccount.pass,
-        },
-    });
-
-    return transporter;
-};
+import sgMail from "@sendgrid/mail";
 
 export const sendPasswordResetEmail = async (toEmail, resetToken) => {
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
-    const transport = await getTransporter();
 
-    const mailOptions = {
-        from: '"RollCall" <noreply@rollcall.dev>',
+    const msg = {
         to: toEmail,
+        from: process.env.SENDER_EMAIL,
         subject: "Reset Your Password - RollCall",
         html: `
             <h2>Password Reset Request</h2>
@@ -37,8 +17,5 @@ export const sendPasswordResetEmail = async (toEmail, resetToken) => {
         `,
     };
 
-    const info = await transport.sendMail(mailOptions);
-
-    // Log the Ethereal preview URL so you can view the email in the browser
-    console.log("Preview URL:", nodemailer.getTestMessageUrl(info));
+    await sgMail.send(msg);
 };
