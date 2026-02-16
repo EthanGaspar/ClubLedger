@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { useAuthContext } from '../hooks/useAuthContext.jsx';
+import useRoles from '../hooks/useRoles.js';
 
 
 const MemberDetailPage = () => {
@@ -14,6 +15,7 @@ const MemberDetailPage = () => {
   const [active, setActive] = React.useState(true)
   const [role, setRole] = React.useState('Member')
   const { user } = useAuthContext();
+  const { roles: availableRoles } = useRoles();
 
   const navigate = useNavigate();
 
@@ -150,7 +152,7 @@ const MemberDetailPage = () => {
                 <select
                   className="select select-bordered w-full"
                   value={member.active ? "true" : "false"}
-                  onChange={(e) => setMember({...member, active: e.target.value})}
+                  onChange={(e) => setMember({...member, active: e.target.value === "true"})}
                 >
                   <option value="true">True</option>
                   <option value="false">False</option>
@@ -166,11 +168,12 @@ const MemberDetailPage = () => {
                     value={member.role}
                     onChange={(e) => setMember({...member, role: e.target.value})}
                   >
-                    <option value="Member">Member</option>
-                    <option value="Officer">Officer</option>
-                    <option value="President">President</option>
-                    <option value="Advisor">Advisor</option>
-                    <option value="Guest">Guest</option>
+                    {member.role === "" && (
+                      <option value="" disabled>(No Role)</option>
+                    )}
+                    {availableRoles.map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
                   </select>
               </div>
               <div className='card-actions justify-end'>

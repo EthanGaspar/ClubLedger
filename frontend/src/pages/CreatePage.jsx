@@ -4,15 +4,24 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext.jsx'
+import useRoles from '../hooks/useRoles.js'
 
 
 const CreatePage = () => {
   const { user } = useAuthContext()
+  const { roles, loading: rolesLoading } = useRoles()
   const [firstName, setFirstName] = React.useState('')
   const [lastName, setLastName] = React.useState('')
   const [active, setActive] = React.useState(true)
-  const [role, setRole] = React.useState('Member')
+  const [role, setRole] = React.useState('')
   const [loading, setLoading] = React.useState(false)
+
+  // Set default role once roles are loaded
+  React.useEffect(() => {
+    if (roles.length > 0 && !role) {
+      setRole(roles[0])
+    }
+  }, [roles, role])
 
   const navigate = useNavigate();
 
@@ -122,12 +131,11 @@ const CreatePage = () => {
                     className="select select-bordered"
                     value={role}
                     onChange={(e) => setRole(e.target.value)}
+                    disabled={rolesLoading}
                   >
-                    <option value="Member">Member</option>
-                    <option value="Officer">Officer</option>
-                    <option value="President">President</option>
-                    <option value="Advisor">Advisor</option>
-                    <option value="Guest">Guest</option>
+                    {roles.map((r) => (
+                      <option key={r} value={r}>{r}</option>
+                    ))}
                   </select>
                 </div>
 

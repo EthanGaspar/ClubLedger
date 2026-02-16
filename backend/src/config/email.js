@@ -7,10 +7,10 @@ export const sendPasswordResetEmail = async (toEmail, resetToken) => {
     const msg = {
         to: toEmail,
         from: process.env.SENDER_EMAIL,
-        subject: "Reset Your Password - RollCall",
+        subject: "Reset Your Password - ClubLedger",
         html: `
             <h2>Password Reset Request</h2>
-            <p>You requested a password reset for your RollCall account.</p>
+            <p>You requested a password reset for your ClubLedger account.</p>
             <p>Click the link below to reset your password. This link expires in 15 minutes.</p>
             <a href="${resetUrl}">${resetUrl}</a>
             <p>If you didn't request this, you can safely ignore this email.</p>

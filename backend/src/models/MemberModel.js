@@ -19,7 +19,7 @@ const memberSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            required: true
+            default: ""
         },
         user_id: {
             type: String,

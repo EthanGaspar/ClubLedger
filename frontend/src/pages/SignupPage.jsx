@@ -49,7 +49,7 @@ const Signup = () => {
                     {/* Brand Section */}
                     <div className="text-center mb-8">
                         <h1 className="text-3xl font-bold font-mono tracking-tight text-primary">
-                            RollCall
+                            ClubLedger
                         </h1>
                         <p className="text-base-content/60 mt-1">
                             Track attendance easily
@@ -60,7 +60,7 @@ const Signup = () => {
                     <div className="card bg-base-100 shadow-xl">
                         <div className="card-body">
                             <h2 className="card-title text-2xl mb-1">Create your account</h2>
-                            <p className="text-base-content/60 mb-6">Get started with RollCall</p>
+                            <p className="text-base-content/60 mb-6">Get started with ClubLedger</p>
 
                             <form onSubmit={handleSubmit} noValidate>
                                 <div className="form-control mb-4">
