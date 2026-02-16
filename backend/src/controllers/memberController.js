@@ -36,11 +36,24 @@ export const getMemberById = async (req, res) => {
 
 export const createMember = async (req, res) => {
     try {
-        const firstName = req.body.firstName;
-        const lastName = req.body.lastName;
+        const firstName = req.body.firstName?.trim();
+        const lastName = req.body.lastName?.trim();
         const active = req.body.active;
-        const role = req.body.role;
+        const role = req.body.role?.trim() ?? "";
         const user_id = req.user._id;
+
+        if (!firstName || !lastName) {
+            return res.status(400).json({message: "First name and last name are required"})
+        }
+        if (firstName.length > 50 || lastName.length > 50) {
+            return res.status(400).json({message: "Names must be 50 characters or less"})
+        }
+        if (role.length > 50) {
+            return res.status(400).json({message: "Role must be 50 characters or less"})
+        }
+        if (typeof active !== "boolean") {
+            return res.status(400).json({message: "Active status must be true or false"})
+        }
 
         const member = new Member({firstName, lastName, active, role, user_id})
         const newMember = await member.save()
@@ -61,7 +74,25 @@ export const updateMember = async (req, res) => {
 
     try {
         const user_id = req.user._id;
-        const {firstName, lastName, active, role} = req.body
+        let {firstName, lastName, active, role} = req.body
+
+        firstName = firstName?.trim();
+        lastName = lastName?.trim();
+        role = role?.trim() ?? "";
+
+        if (!firstName || !lastName) {
+            return res.status(400).json({message: "First name and last name are required"})
+        }
+        if (firstName.length > 50 || lastName.length > 50) {
+            return res.status(400).json({message: "Names must be 50 characters or less"})
+        }
+        if (role.length > 50) {
+            return res.status(400).json({message: "Role must be 50 characters or less"})
+        }
+        if (typeof active !== "boolean") {
+            return res.status(400).json({message: "Active status must be true or false"})
+        }
+
         //update all specified fields
         const updatedMember = await Member.findOneAndUpdate(
             { _id: id, user_id },
