@@ -21,10 +21,11 @@ export const getMemberById = async (req, res) => {
         return res.status(404).json({message: "Member not found"})
     }
     try {
-        const member = await Member.findById(req.params.id)
-        //Verifies existence
+        const user_id = req.user._id;
+        const member = await Member.findOne({ _id: id, user_id })
+        //Checks that id exists and belongs to user
         if (!member) {
-            return res.status(404)
+            return res.status(404).json({message: "Member not found"})
         }
         res.status(200).json(member)
     } catch (error) {
@@ -59,11 +60,13 @@ export const updateMember = async (req, res) => {
     }
 
     try {
+        const user_id = req.user._id;
         const {firstName, lastName, active, role} = req.body
         //update all specified fields
-        const updatedMember = await Member.findByIdAndUpdate(req.params.id,
+        const updatedMember = await Member.findOneAndUpdate(
+            { _id: id, user_id },
             {firstName, lastName, active, role},
-            {new: true, }
+            {new: true}
         )
         //Checks existence of id
         if (!updatedMember){
@@ -83,7 +86,8 @@ export const deleteMember = async (req, res) => {
     }
 
     try {
-        const deletedMember = await Member.findByIdAndDelete(id, {new: false})
+        const user_id = req.user._id;
+        const deletedMember = await Member.findOneAndDelete({ _id: id, user_id })
         if (!deletedMember) {
             return res.status(404).json({ message: "Member not found" });
         }
