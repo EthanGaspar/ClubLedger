@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-RollCall is a user-friendly attendance tracking and member management platform. MERN stack application with a monorepo structure containing separate frontend (React/Vite) and backend (Express/MongoDB) directories.
+ClubLedger is a user-friendly attendance tracking and member management platform. MERN stack application with a monorepo structure containing separate frontend (React/Vite) and backend (Express/MongoDB) directories.
 
 ## Git Workflow
 
@@ -39,7 +39,8 @@ npm run start    # Start backend (serves built frontend in production)
 ### Frontend (`/frontend`)
 - React 19 with Vite, TailwindCSS, DaisyUI
 - Entry: `src/main.jsx` → `src/App.jsx` (routes)
-- Routes: `/` (HomePage), `/create` (CreatePage), `/member/:id` (MemberDetailPage), `/settings` (SettingsPage), `/login` (LoginPage), `/signup` (SignupPage), `/forgot-password` (ForgotPasswordPage), `/reset-password/:token` (ResetPasswordPage)
+- Routes: `/` (WelcomePage if unauthenticated, HomePage if authenticated), `/welcome` (WelcomePage, redirects to `/` if authenticated), `/create` (CreatePage), `/member/:id` (MemberDetailPage), `/settings` (SettingsPage), `/login` (LoginPage), `/signup` (SignupPage), `/forgot-password` (ForgotPasswordPage), `/reset-password/:token` (ResetPasswordPage)
+- Protected routes redirect to `/login` if not authenticated
 - API calls via Axios instance in `src/lib/axios.js` (auto-switches between dev localhost:5001 and prod `/api`)
 - Components in `src/components/`, pages in `src/pages/`
 
@@ -58,6 +59,7 @@ npm run start    # Start backend (serves built frontend in production)
   - `useSignUp.jsx` - signup logic with loading/error states
   - `useForgotPassword.jsx` - forgot password request with loading/error/success states
   - `useResetPassword.jsx` - reset password with token, loading/error states
+  - `useRoles.jsx` - fetches user's roles from settings API, provides `roles`, `setRoles`, `loading`
 
 ### Backend (`/backend`)
 - Express server on port 5001
@@ -80,6 +82,13 @@ npm run start    # Start backend (serves built frontend in production)
 - `POST /forgot-password` - Request password reset email
 - `POST /reset-password/:token` - Reset password with token
 
+#### Settings (`/api/settings`) - all routes require authentication
+- `GET /` - Get user's settings (auto-creates with defaults if not exists)
+- `PUT /roles` - Update entire roles array
+- `PATCH /roles/rename` - Rename a role (bulk updates affected members)
+- `DELETE /roles` - Delete a role (clears role from affected members)
+- `GET /roles/count` - Get count of members with a specific role
+
 ### Schemas
 
 #### Member Schema
@@ -88,7 +97,8 @@ npm run start    # Start backend (serves built frontend in production)
   firstName: String (required),
   lastName: String (required),
   active: Boolean (required),
-  role: String (required),
+  role: String (default: ""),
+  user_id: String (required),
   createdAt: Date,
   updatedAt: Date
 }
@@ -106,6 +116,23 @@ npm run start    # Start backend (serves built frontend in production)
 }
 ```
 
+#### Settings Schema
+```javascript
+{
+  user_id: String (required, unique),
+  roles: [String] (default: ["Member", "Officer", "President", "Advisor", "Guest"])
+}
+```
+
+### Role Management System
+- Roles are user-specific (data isolation via `user_id`)
+- Default roles created on first settings fetch: Member, Officer, President, Advisor, Guest
+- Constraints: max 10 roles, max 50 chars per role name, no duplicates, minimum 1 role
+- Role rename cascades to all members with that role
+- Role delete clears the role from affected members (sets to empty string)
+- SettingsPage provides full CRUD UI for roles with confirmation modals
+- CreatePage and MemberDetailPage dynamically fetch roles via `useRoles` hook
+
 ### Authentication System
 - JWT-based authentication with 15-minute token expiry
 - Passwords hashed with bcrypt (salt rounds: 10)
@@ -114,6 +141,13 @@ npm run start    # Start backend (serves built frontend in production)
   - Password: min 8 chars, 1 lowercase, 1 uppercase, 1 number, 1 symbol, max 64 characters
 - Token payload contains user `_id`
 - Auth files: `userModel.js`, `userController.js`, `userRoutes.js`
+- Settings files: `SettingsModel.js`, `settingsController.js`, `settingsRoutes.js`
+
+### Welcome Page
+- Displayed at `/` for unauthenticated users, redirects authenticated users to HomePage
+- Hero section with ClubLedger branding and feature highlights
+- Sample screenshots for light/dark themes
+- Login and Signup navigation links
 
 ## Environment Variables
 
@@ -130,8 +164,9 @@ Backend requires `.env` with:
 
 ## Security Notes
 
-- JWT authentication implemented for user signup/login (auth branch)
-- Member endpoints not yet protected by authentication middleware
+- JWT authentication implemented for user signup/login
+- Member and settings data isolated per user via `user_id`
+- Settings endpoints protected by authentication middleware
 - Passwords hashed with bcrypt before storage
 - Rate limiting via Upstash Redis (10 requests/20 seconds per IP)
 - Password reset via email with secure, single-use, time-limited tokens (15 min expiry, SHA-256 hashed in DB)
