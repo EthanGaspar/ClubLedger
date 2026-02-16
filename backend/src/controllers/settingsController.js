@@ -1,9 +1,8 @@
 import Settings from "../models/SettingsModel.js";
 import Member from "../models/MemberModel.js";
+import { MAX_ROLES, MAX_ROLE_LENGTH } from "../constants.js";
 
 const DEFAULT_ROLES = ["Member", "Officer", "President", "Advisor", "Guest"];
-const MAX_ROLES = 10;
-const MAX_ROLE_LENGTH = 50;
 
 // Validate a roles array
 const validateRolesArray = (roles) => {

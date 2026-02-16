@@ -1,5 +1,6 @@
 import mongoose from "mongoose"
 import Member from "../models/MemberModel.js"
+import { MAX_ROLE_LENGTH, MAX_NAME_LENGTH } from "../constants.js"
 
 export const getAllMembers = async (req, res) => {
     //.find comes from the mongoose.model object
@@ -45,11 +46,11 @@ export const createMember = async (req, res) => {
         if (!firstName || !lastName) {
             return res.status(400).json({message: "First name and last name are required"})
         }
-        if (firstName.length > 50 || lastName.length > 50) {
-            return res.status(400).json({message: "Names must be 50 characters or less"})
+        if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
+            return res.status(400).json({message: `Names must be ${MAX_NAME_LENGTH} characters or less`})
         }
-        if (role.length > 50) {
-            return res.status(400).json({message: "Role must be 50 characters or less"})
+        if (role.length > MAX_ROLE_LENGTH) {
+            return res.status(400).json({message: `Role must be ${MAX_ROLE_LENGTH} characters or less`})
         }
         if (typeof active !== "boolean") {
             return res.status(400).json({message: "Active status must be true or false"})
@@ -83,11 +84,11 @@ export const updateMember = async (req, res) => {
         if (!firstName || !lastName) {
             return res.status(400).json({message: "First name and last name are required"})
         }
-        if (firstName.length > 50 || lastName.length > 50) {
-            return res.status(400).json({message: "Names must be 50 characters or less"})
+        if (firstName.length > MAX_NAME_LENGTH || lastName.length > MAX_NAME_LENGTH) {
+            return res.status(400).json({message: `Names must be ${MAX_NAME_LENGTH} characters or less`})
         }
-        if (role.length > 50) {
-            return res.status(400).json({message: "Role must be 50 characters or less"})
+        if (role.length > MAX_ROLE_LENGTH) {
+            return res.status(400).json({message: `Role must be ${MAX_ROLE_LENGTH} characters or less`})
         }
         if (typeof active !== "boolean") {
             return res.status(400).json({message: "Active status must be true or false"})
