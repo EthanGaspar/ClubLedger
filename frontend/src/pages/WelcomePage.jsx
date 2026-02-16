@@ -24,14 +24,14 @@ const WelcomePage = () => {
             description: 'Add, edit, and organize your club members in one place.',
         },
         {
-            icon: <ClipboardCheck className="size-8" />,
-            title: 'Attendance Tracking',
-            description: 'Track who\'s present with a simple, intuitive interface.',
-        },
-        {
             icon: <Tag className="size-8" />,
             title: 'Role Management',
             description: 'Assign custom roles to categorize and manage members.',
+        },
+        {
+            icon: <ClipboardCheck className="size-8" />,
+            title: 'Event & Attendance Tracking (Coming Soon)',
+            description: 'Track who\'s present with a simple, intuitive interface.',
         },
     ]
 
