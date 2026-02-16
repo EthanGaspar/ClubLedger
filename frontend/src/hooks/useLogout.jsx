@@ -19,7 +19,7 @@ export const useLogout = () => {
         dispatch({ type: 'LOGOUT' });
 
         toast.success('Logged out');
-        navigate('/login');
+        navigate('/welcome');
     }
 
     return { logout };
