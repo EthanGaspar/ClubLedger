@@ -9,6 +9,7 @@ import Login from "./pages/LoginPage"
 import Signup from "./pages/SignupPage"
 import ForgotPassword from "./pages/ForgotPasswordPage"
 import ResetPassword from "./pages/ResetPasswordPage"
+import WelcomePage from "./pages/WelcomePage"
 
 const App = () => {
   const { user, loading } = useAuthContext();
@@ -27,7 +28,8 @@ const App = () => {
       <div className="absolute inset-0 -z-10 h-full w-full bg-base-200" />
 
       <Routes>
-        <Route path="/" element={user ? <HomePage /> : <Navigate to="/login" />} />
+        <Route path="/" element={user ? <HomePage /> : <WelcomePage />} />
+        <Route path="/welcome" element={user ? <Navigate to="/" /> : <WelcomePage />} />
         <Route path="/create" element={user ? <CreatePage /> : <Navigate to="/login" />} />
         <Route path="/member/:id" element={user ? <MemberDetailPage /> : <Navigate to="/login" />} />
         <Route path="/settings" element={user ? <SettingsPage /> : <Navigate to="/login" />} />
