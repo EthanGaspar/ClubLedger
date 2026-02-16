@@ -52,7 +52,7 @@ const Navbar = () => {
       <div className='mx-auto max-w-6xl p-4'>
         <div className='flex items-center justify-between'>
             <Link to={"/"} className={`text-3xl font-bold font-mono tracking-tight btn btn-ghost rounded-full ${theme === 'emerald' ? 'text-primary-focus' : 'text-primary'}`}>
-                RollCall
+                ClubLedger
             </Link>
             <div className='flex items-center gap-1 sm:gap-4'>
 
