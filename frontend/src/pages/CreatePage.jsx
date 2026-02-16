@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeftIcon } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useAuthContext } from '../hooks/useAuthContext.jsx'
-import useRoles from '../hooks/useRoles.js'
+import useRoles from '../hooks/useRoles.jsx'
 
 
 const CreatePage = () => {

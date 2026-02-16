@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import toast from 'react-hot-toast';
 import { ArrowLeftIcon, LoaderIcon, Trash2Icon } from 'lucide-react';
 import { useAuthContext } from '../hooks/useAuthContext.jsx';
-import useRoles from '../hooks/useRoles.js';
+import useRoles from '../hooks/useRoles.jsx';
 
 
 const MemberDetailPage = () => {
