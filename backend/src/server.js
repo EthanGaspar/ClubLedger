@@ -9,6 +9,7 @@ import userRoutes from "./routes/userRoutes.js"
 import settingsRoutes from "./routes/settingsRoutes.js"
 import connectDB from "./db.js"
 import rateLimiter from "./middleware/rateLimiter.js"
+import requestLogger from "./middleware/requestLogger.js"
 
 // ES module equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url)
@@ -34,6 +35,7 @@ if (process.env.NODE_ENV !== "production") {
 //.use specifies a middleware
 //parses json, gives access to req.body
 app.use(express.json())
+app.use(requestLogger)
 
 //Does this break if client is not using a trust proxy/NAT
 app.set("trust proxy", 1)
