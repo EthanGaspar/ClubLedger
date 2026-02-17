@@ -15,11 +15,6 @@ const CreatePage = () => {
   const [active, setActive] = React.useState(true)
   const [role, setRole] = React.useState('')
   const [loading, setLoading] = React.useState(false)
-  const [maxMembers, setMaxMembers] = React.useState(null)
-
-  React.useEffect(() => {
-    api.get("/constants").then(res => setMaxMembers(res.data.MAX_MEMBERS_PER_ACCOUNT))
-  }, [])
 
   // Set default role once roles are loaded
   React.useEffect(() => {
@@ -70,7 +65,7 @@ const CreatePage = () => {
 
       console.log("Error creating member:", error)
       if (error?.response?.data?.message === "Maximum number of members reached") {
-        toast.error(`Member limit reached (max ${maxMembers})`)
+        navigate('/limit-reached?type=member')
       } else {
         toast.error('Failed to create member')
       }
