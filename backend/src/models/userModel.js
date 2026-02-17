@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import validator from "validator";
 import crypto from "crypto";
+import { MAX_USERS } from "../constants.js";
 
 const userSchema = new mongoose.Schema(
     {
@@ -46,6 +47,11 @@ userSchema.statics.signup = async function (email, password) {
         throw Error("Password not strong enough")
     }
     
+    const userCount = await this.countDocuments()
+    if (userCount >= MAX_USERS) {
+        throw Error("Maximum number of users reached")
+    }
+
     const emailExists = await this.findOne({ email })
     //no duplicates
     if (emailExists) {
