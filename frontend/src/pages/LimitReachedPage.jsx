@@ -35,7 +35,7 @@ const LimitReachedPage = () => {
                 Limit Reached
               </h2>
               <p className="mb-4">
-                Hey! We're still piloting our page and {message.toLowerCase()}
+                Hey! We're still piloting and {message.toLowerCase()}
               </p>
               <p>
                 Please reach out to{' '}
