@@ -9,7 +9,15 @@ const LimitReachedPage = () => {
   const [limits, setLimits] = React.useState(null)
 
   React.useEffect(() => {
-    api.get('/constants').then(res => setLimits(res.data))
+    const fetchConstants = async () => {
+      try {
+        const res = await api.get('/constants')
+        setLimits(res.data)
+      } catch (error) {
+        console.error('Error fetching constants:', error)
+      }
+    }
+    fetchConstants()
   }, [])
 
   const isAccountLimit = type !== 'member'
