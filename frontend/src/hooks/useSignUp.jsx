@@ -25,13 +25,14 @@ export const useSignup = () => {
             toast.success('Signup successful!');
             navigate('/');
         } catch (error) {
-            const msg = error.response?.data?.error || 'Signup failed. Please try again.';
+            const backendMsg = error.response?.data?.error || error.response?.data?.message;
+            const msg = backendMsg || 'Signup failed. Please try again.';
             if (msg.toLowerCase().includes('maximum number of users reached')) {
                 navigate('/limit-reached?type=account');
                 return;
             }
             setError(msg);
-            toast.error(error.response?.data?.error || 'Signup failed');
+            toast.error(msg);
         } finally {
             setLoading(false);
         }
