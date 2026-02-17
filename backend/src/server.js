@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser"
 import memberRoutes from "./routes/memberRoutes.js"
 import userRoutes from "./routes/userRoutes.js"
 import settingsRoutes from "./routes/settingsRoutes.js"
+import constantsRoutes from "./routes/constantsRoutes.js"
 import connectDB from "./db.js"
 import rateLimiter from "./middleware/rateLimiter.js"
 import requestLogger from "./middleware/requestLogger.js"
@@ -46,6 +47,7 @@ app.set("trust proxy", 1)
 app.use("/api/members", rateLimiter, memberRoutes)
 app.use("/api/auth/users", rateLimiter, userRoutes)
 app.use("/api/settings", rateLimiter, settingsRoutes)
+app.use("/api/constants", constantsRoutes)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
 if (process.env.NODE_ENV === "production") {
