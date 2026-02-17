@@ -1,6 +1,7 @@
 ClubLedger:
 
 An attendance tracking and member managment platform.
+Site URL: https://club-ledger.com/
 
 Current features:
 - Secured user model, each user has isolated and conifgurable role and member models.
