@@ -10,6 +10,7 @@ import Signup from "./pages/SignupPage"
 import ForgotPassword from "./pages/ForgotPasswordPage"
 import ResetPassword from "./pages/ResetPasswordPage"
 import WelcomePage from "./pages/WelcomePage"
+import LimitReachedPage from "./pages/LimitReachedPage"
 
 const App = () => {
   const { user, loading } = useAuthContext();
@@ -37,6 +38,7 @@ const App = () => {
         <Route path="/signup" element={!user ? <Signup /> : <Navigate to="/" />} />
         <Route path="/forgot-password" element={!user ? <ForgotPassword /> : <Navigate to="/" />} />
         <Route path="/reset-password/:token" element={!user ? <ResetPassword /> : <Navigate to="/" />} />
+        <Route path="/limit-reached" element={<LimitReachedPage />} />
       </Routes>
     </div>
   )
