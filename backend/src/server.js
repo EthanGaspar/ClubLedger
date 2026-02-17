@@ -47,7 +47,7 @@ app.set("trust proxy", 1)
 app.use("/api/members", rateLimiter, memberRoutes)
 app.use("/api/auth/users", rateLimiter, userRoutes)
 app.use("/api/settings", rateLimiter, settingsRoutes)
-app.use("/api/constants", constantsRoutes)
+app.use("/api/constants", rateLimiter, constantsRoutes)
 app.use(express.static(path.join(__dirname, "../../frontend/dist")))
 
 if (process.env.NODE_ENV === "production") {
