@@ -12,14 +12,14 @@ const LimitReachedPage = () => {
     api.get('/constants').then(res => setLimits(res.data))
   }, [])
 
-  const isMember = type === 'member'
+  const isAccountLimit = type !== 'member'
   const limitValue = limits
-    ? isMember ? limits.MAX_MEMBERS_PER_ACCOUNT : limits.MAX_USERS
+    ? isAccountLimit ? limits.MAX_USERS : limits.MAX_MEMBERS_PER_ACCOUNT
     : null
 
-  const message = isMember
-    ? `You've reached the maximum limit of ${limitValue ?? '...'} members per account.`
-    : `The maximum number of ${limitValue ?? '...'} user accounts has been reached.`
+  const message = isAccountLimit
+    ? `The maximum number of ${limitValue ?? '...'} user accounts has been reached.`
+    : `You've reached the maximum limit of ${limitValue ?? '...'} members per account.`
 
   return (
     <div className="min-h-screen bg-base-200">
