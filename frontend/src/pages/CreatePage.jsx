@@ -64,7 +64,8 @@ const CreatePage = () => {
       }
 
       console.log("Error creating member:", error)
-      if (error?.response?.data?.message === "Maximum number of members reached") {
+      const errorMessage = error?.response?.data?.message;
+      if (typeof errorMessage === 'string' && errorMessage.toLowerCase().includes('maximum number of members reached')) {
         navigate('/limit-reached?type=member')
       } else {
         toast.error('Failed to create member')
