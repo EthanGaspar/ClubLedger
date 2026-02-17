@@ -1,6 +1,6 @@
 import mongoose from "mongoose"
 import Member from "../models/MemberModel.js"
-import { MAX_ROLE_LENGTH, MAX_NAME_LENGTH } from "../constants.js"
+import { MAX_ROLE_LENGTH, MAX_NAME_LENGTH, MAX_MEMBERS_PER_ACCOUNT } from "../constants.js"
 
 export const getAllMembers = async (req, res) => {
     //.find comes from the mongoose.model object
@@ -54,6 +54,11 @@ export const createMember = async (req, res) => {
         }
         if (typeof active !== "boolean") {
             return res.status(400).json({message: "Active status must be true or false"})
+        }
+
+        const memberCount = await Member.countDocuments({ user_id })
+        if (memberCount >= MAX_MEMBERS_PER_ACCOUNT) {
+            return res.status(400).json({message: "Maximum number of members reached"})
         }
 
         const member = new Member({firstName, lastName, active, role, user_id})
