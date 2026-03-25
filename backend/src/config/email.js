@@ -2,8 +2,10 @@ import sgMail from "@sendgrid/mail";
 
 export const sendPasswordResetEmail = async (toEmail, resetToken) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    //issue of hardcoding localhost into resetURL??
     const resetUrl = `${process.env.CLIENT_URL}/reset-password/${resetToken}`;
 
+    //specify email
     const msg = {
         to: toEmail,
         from: process.env.SENDER_EMAIL,

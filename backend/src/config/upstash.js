@@ -2,10 +2,10 @@ import { Ratelimit } from "@upstash/ratelimit"
 import { Redis } from "@upstash/redis"
 import "dotenv/config"
 
+//establish a rate limiter per-ip/per-endpoint | utilizes sliding window for scale
 const ratelimit = new Ratelimit({
     redis: Redis.fromEnv(),
-    //10 requests, per 30 second
-    limiter:Ratelimit.slidingWindow(100,"60 s")
+    limiter:Ratelimit.slidingWindow(100,"60 s") //<# of reqs>, <seconds>
 })
 
 export default ratelimit

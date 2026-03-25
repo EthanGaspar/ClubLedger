@@ -2,13 +2,14 @@ import mongoose from "mongoose"
 import Member from "../models/MemberModel.js"
 import { MAX_ROLE_LENGTH, MAX_NAME_LENGTH, MAX_MEMBERS_PER_ACCOUNT } from "../constants.js"
 
+// get all members for a user
 export const getAllMembers = async (req, res) => {
     //.find comes from the mongoose.model object
     try {
         const user_id = req.user._id;
-        //"find(user_id)" specifices to fetch all members for specific user
-        const members = await Member.find({user_id}).sort({createdAt: -1}) //-1 will sort in desc
-        res.status(200).json(members)
+        //"find(user_id)" specifices to fetch all members for specific user, .sort({createdAt: -1}) sorts by creation date, newest to oldest
+        const user_members = await Member.find({user_id}).sort({createdAt: -1})
+        res.status(200).json(user_members)
     } catch (error) {
         res.status (500).json({message:"Internal server error"})
         console.error("Error in getAllMembers controller", error);
@@ -18,8 +19,9 @@ export const getAllMembers = async (req, res) => {
 export const getMemberById = async (req, res) => {
     //Checks format of id
     const id = req.params.id
-    if (!mongoose.isValidObjectId(id)){
-        return res.status(404).json({message: "Member not found"})
+    //conditional for id format — not existence in db
+    if (!mongoose.isValidObjectId(id)){ 
+        return res.status(404).json({message: "Member not found"}) //leave as not found for opaquness
     }
     try {
         const user_id = req.user._id;
